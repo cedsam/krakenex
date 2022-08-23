@@ -12,3 +12,5 @@ with open(tmp+'\\keys', "w") as f:
     f.write(api_key+"\n"+api_sec)
 kraken.load_key(tmp+'\\keys')
 os.remove(tmp+'\\keys')
+
+balance = kraken.query_private("Balance")
