@@ -1,6 +1,5 @@
 import krakenex
 import os
-import re
 
 #appel de l'api via krakenex
 kraken = krakenex.API()
