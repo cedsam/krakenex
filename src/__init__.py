@@ -50,7 +50,6 @@ def main():
         exit(1)
 
 if __name__ == "__main__":
-    #ajout prix d'achat
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("-put", "--p", required=True, type=int, help="prix d'achat")
