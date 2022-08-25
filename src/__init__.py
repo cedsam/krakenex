@@ -37,13 +37,24 @@ def main():
         mail (smtpUser,smtpPassword,smtpServer,smtpPort,subject,msg,destination)
         exit(1)
     soldeEuro = soldeEuro['result']
-    soldeEuro = soldeEuro['ZEUR']
+    soldeEuro = float (soldeEuro['ZEUR'])
+
+    #vérification du solde
+    solde = float(args.p)
+    solde = soldeEuro - solde
+    if solde < 0:
+        logging.warning("le solde est insuffisant, procéder à un virement de fonds (btc, eur...)")
+        subject='Krakenapi warning'
+        msg='le solde est insuffisant, procéder à un virement de fonds (btc, eur...)'
+        mail (smtpUser,smtpPassword,smtpServer,smtpPort,subject,msg,destination)
+        exit(1)
 
 if __name__ == "__main__":
     #ajout prix d'achat
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("-put", "--p", required=True, type=int, help="prix d'achat")
+    parser.add_argument("-asset", "--a", required=True, type=str, help="actif a acheter")
     args = parser.parse_args()
 
     main()
