@@ -3,5 +3,6 @@ usage of library krakenex to interact with Kraken API for my personal investemen
 
 # install
 1. pip install pykrakenapi
-2. get api keys from kraken.com
-3. put api keys in the environment variables
+2. pip install keyring
+3. get api keys from kraken.com
+4. put api keys in the password manager
