@@ -7,7 +7,10 @@ def main():
     import keyring
 
     #configuration journaux
-    os.remove('krakenapi.log')
+    try:
+        os.remove('krakenapi.log')
+    except:
+        pass
     logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s', filename='krakenapi.log', encoding='utf-8', level=logging.DEBUG, datefmt='%d-%m-%Y %H:%M:%S')
     
     #configuration mail
@@ -32,7 +35,7 @@ def main():
         soldeEuro = kraken.query_private("Balance")
     except:
         msg='vérifier la connexion ou les clés API\nAdresse journaux :'
-        logging.warning("{msg}")
+        logging.warning(msg)
         subject='Krakenapi warning'
         mail (smtpUser,smtpPassword,smtpServer,smtpPort,subject,msg,destination)
         exit(1)
@@ -44,7 +47,7 @@ def main():
     solde = soldeEuro - solde
     if solde < 0:
         msg='le solde est insuffisant, procéder à un virement de fonds (btc, eur...)'
-        logging.warning("{msg}")
+        logging.warning(msg)
         subject='Krakenapi warning'
         mail (smtpUser,smtpPassword,smtpServer,smtpPort,subject,msg,destination)
         exit(1)
