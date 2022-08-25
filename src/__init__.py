@@ -31,9 +31,9 @@ def main():
     try:
         soldeEuro = kraken.query_private("Balance")
     except:
-        logging.warning("vérifier la connexion ou les clés API")
-        subject='Krakenapi warning'
         msg='vérifier la connexion ou les clés API\nAdresse journaux :'
+        logging.warning("{msg}")
+        subject='Krakenapi warning'
         mail (smtpUser,smtpPassword,smtpServer,smtpPort,subject,msg,destination)
         exit(1)
     soldeEuro = soldeEuro['result']
@@ -43,9 +43,9 @@ def main():
     solde = float(args.p)
     solde = soldeEuro - solde
     if solde < 0:
-        logging.warning("le solde est insuffisant, procéder à un virement de fonds (btc, eur...)")
-        subject='Krakenapi warning'
         msg='le solde est insuffisant, procéder à un virement de fonds (btc, eur...)'
+        logging.warning("{msg}")
+        subject='Krakenapi warning'
         mail (smtpUser,smtpPassword,smtpServer,smtpPort,subject,msg,destination)
         exit(1)
 
