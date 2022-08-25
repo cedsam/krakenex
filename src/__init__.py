@@ -12,10 +12,10 @@ def main():
     
     #configuration mail
     smtpUser = keyring.get_password('orange.username', 'username')
-    smtpPassword = keyring.get_password('smtp.orange.fr', 'password')
+    smtpPassword = keyring.get_password('orange.password', 'password')
     smtpServer = 'smtp.orange.fr'
     smtpPort = 587
-    destination = keyring.get_password('imap.gmail.com', 'username')
+    destination = keyring.get_password('gmail.username', 'username')
 
     #appel de l'api via krakenex
     kraken = krakenex.API()
@@ -40,4 +40,10 @@ def main():
     soldeEuro = soldeEuro['ZEUR']
 
 if __name__ == "__main__":
+    #ajout prix d'achat
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-put", "--p", required=True, type=int, help="prix d'achat")
+    args = parser.parse_args()
+
     main()
