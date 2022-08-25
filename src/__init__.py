@@ -13,7 +13,7 @@ def main():
     kraken = krakenex.API()
     logging.info(kraken)
 
-    ##chargement clé privé et clé api
+    #chargement clé privé et clé api dans windows (https://docs.microsoft.com/en-us/windows/uwp/security/credential-locker)
     api_key = keyring.get_password('API_KEY_KRAKEN', 'KEY')
     api_sec = keyring.get_password('API_SEC_KRAKEN','SEC')
     keys = keyFile(api_key,api_sec)
