@@ -5,6 +5,7 @@ def main():
     from modules import mail
     import logging
     import keyring
+    import re
 
     #configuration journaux
     try:
@@ -31,10 +32,9 @@ def main():
     kraken.load_key(keys)
 
     #récuperation du solde
-    try:
-        soldeEuro = kraken.query_private("Balance")
-    except:
-        msg='vérifier la connexion ou les clés API\nAdresse journaux :'
+    soldeEuro = kraken.query_private("Balance")
+    if not 'result' in soldeEuro:
+        msg='vérifier la connexion ou les clés API\n'
         logging.warning(msg)
         subject='Krakenapi warning'
         mail (smtpUser,smtpPassword,smtpServer,smtpPort,subject,msg,destination)
