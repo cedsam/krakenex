@@ -34,14 +34,13 @@ def main():
     #récuperation du solde
     soldeEuro = kraken.query_private("Balance")
     if not 'result' in soldeEuro:
-        msg='vérifier la connexion ou les clés API\n'
+        msg='vérifier la connexion, les clés API ou la requête\n'
         logging.warning(msg)
         subject='Krakenapi warning'
         mail (smtpUser,smtpPassword,smtpServer,smtpPort,subject,msg,destination)
         exit(1)
-    soldeEuro = soldeEuro['result']
-    soldeEuro = float (soldeEuro['ZEUR'])
-
+    soldeEuro = float (soldeEuro['result']['ZEUR'])
+    
     #vérification du solde
     solde = float(args.p)
     solde = soldeEuro - solde
