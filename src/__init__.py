@@ -9,10 +9,11 @@ def main():
 
     #configuration journaux
     try:
-        os.remove('krakenapi.log')
+        log = os.environ['TMP']+"\\krakenapi.log"
+        os.remove(log)
     except:
         pass
-    logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s', filename='krakenapi.log', encoding='utf-8', level=logging.DEBUG, datefmt='%d-%m-%Y %H:%M:%S')
+    logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s', filename=log, encoding='utf-8', level=logging.DEBUG, datefmt='%d-%m-%Y %H:%M:%S')
     
     #configuration mail
     smtpUser = keyring.get_password('orange.username', 'username')
@@ -30,7 +31,7 @@ def main():
     api_sec = keyring.get_password('API_SEC_KRAKEN','SEC')
     keys = keyFile(api_key,api_sec)
     kraken.load_key(keys)
-
+    os.remove(keys)
     #récuperation du solde
     soldeEuro = kraken.query_private("Balance")
     if not 'result' in soldeEuro:
@@ -40,7 +41,7 @@ def main():
         mail (smtpUser,smtpPassword,smtpServer,smtpPort,subject,msg,destination)
         exit(1)
     soldeEuro = float (soldeEuro['result']['ZEUR'])
-    
+
     #vérification du solde
     solde = float(args.p)
     solde = soldeEuro - solde
@@ -51,12 +52,24 @@ def main():
         mail (smtpUser,smtpPassword,smtpServer,smtpPort,subject,msg,destination)
         exit(1)
 
+    #execution de l'ordre
+    assetValue = kraken.query_public('Ticker?pair='+args.a)
+    assetValue = float(args.p)/(float(assetValue['result'][args.a]['a'][0]))
+    assetValue = str(assetValue)
+    data = {'nonce': '0', 'ordertype' : 'market', 'type':'buy', 'volume': ''+assetValue+'', 'pair':''+args.a+'', 'validate' :'False'}
+    assetValue = kraken.query_private("AddOrder",data)
+    logging.info(assetValue)
+    assetValue = str(assetValue)
+    subject = 'Achat via Krakenapi'
+    msg = 'un ordre est en cours\n(info : '+assetValue+')'
+    mail (smtpUser,smtpPassword,smtpServer,smtpPort,subject,msg,destination)
+
 if __name__ == "__main__":
     #ajout prix d'achat
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("-put", "--p", required=True, type=int, help="prix d'achat")
-    parser.add_argument("-asset", "--a", required=True, type=str, help="actif a acheter")
+    parser.add_argument("-put", "--p", required=True, type=float, help="prix d'achat")
+    parser.add_argument("-asset", "--a", required=True, type=str, help="actif a acheter (voir liste Tradable Asset Pairs)")
     args = parser.parse_args()
 
     main()
